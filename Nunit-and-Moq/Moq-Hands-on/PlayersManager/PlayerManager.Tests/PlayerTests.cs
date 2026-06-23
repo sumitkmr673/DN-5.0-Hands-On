@@ -19,7 +19,7 @@ namespace PlayerManager.Tests
         // --- REQUIREMENT 1: Test the Exception ---
         // The PDF asked to use [ExpectedException], but that is deprecated in modern NUnit.
         // We are using Assert.Throws instead, which is the industry standard.
-        // [ExpectedException(typeof(ArgumentException))] <-- OLD WAY
+        // [ExpectedException(typeof(ArgumentException))] // OLD WAY
         [TestCase("ExistingPlayer")]
         public void RegisterNewPlayer_ShouldThrowException_WhenPlayerExists(string playerName)
         {
