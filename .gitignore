@@ -1,0 +1,35 @@
+# ==========================================
+# OS-Generated Files
+# ==========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ==========================================
+# .NET / C# / Visual Studio (CRITICAL)
+# ==========================================
+# Ignore the compiled output folders you see in your screenshots
+[Bb]in/
+[Oo]bj/
+
+# Ignore Visual Studio local workspace files
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# ==========================================
+# SQL Server / SSMS
+# ==========================================
+# Ignore massive database files
+*.mdf
+*.ldf
+*.ndf
+*.bak
+*.trn
+
+# Ignore SSMS project temporary files
+*.ssmssln
+*.ssmssqlproj
+*.sqlproj.user

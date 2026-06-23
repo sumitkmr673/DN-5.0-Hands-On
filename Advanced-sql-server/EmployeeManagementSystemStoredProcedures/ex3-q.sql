@@ -1,0 +1,2 @@
+DROP PROCEDURE sp_GetEmployeesByDept;
+GO
