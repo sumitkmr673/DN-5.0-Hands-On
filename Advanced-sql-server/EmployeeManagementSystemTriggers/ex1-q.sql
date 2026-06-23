@@ -7,7 +7,6 @@ CREATE TABLE EmployeeChanges (
 );
 GO
 
--- Step 2: Create an AFTER trigger on the Employees table [cite: 302]
 CREATE TRIGGER trg_AfterSalaryUpdate
 ON Employees
 AFTER UPDATE
