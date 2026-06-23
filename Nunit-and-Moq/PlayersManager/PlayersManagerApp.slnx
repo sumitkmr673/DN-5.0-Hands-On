@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PlayerManager.Tests/PlayerManager.Tests.csproj" />
+  <Project Path="PlayersManagerLib/PlayersManagerLib.csproj" />
+</Solution>

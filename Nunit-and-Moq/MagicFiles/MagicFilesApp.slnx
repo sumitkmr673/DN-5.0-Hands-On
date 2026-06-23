@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DirectoryExplorer.Tests/DirectoryExplorer.Tests.csproj" />
+  <Project Path="MagicFilesLib/MagicFilesLib.csproj" />
+</Solution>
