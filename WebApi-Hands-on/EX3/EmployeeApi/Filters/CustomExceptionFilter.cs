@@ -23,7 +23,7 @@ namespace EmployeeApi.Filters
                 StatusCode = 500
             };
 
-            // Tell the framework we handled the crash
+            // Set ExceptionHandled to true
             context.ExceptionHandled = true;
         }
     }
