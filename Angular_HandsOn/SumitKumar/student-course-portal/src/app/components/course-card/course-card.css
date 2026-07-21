@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+.card {
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.card--enrolled {
+  background-color: #f0f8ff;
+}
+
+.card--full {
+  border: 2px dashed #333;
+}
+
+.expanded {
+  min-height: 250px;
+}
