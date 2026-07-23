@@ -4,6 +4,21 @@
 
 <ng-container *ngIf="!isLoading">
   <ng-container *ngIf="courses.length > 0; else noCourses">
+    <button
+      (click)="addDummyCourse()"
+      style="
+        margin-bottom: 15px;
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      "
+    >
+      Add Test Course
+    </button>
+    <app-course-summary-widget></app-course-summary-widget>
     <app-course-card
       *ngFor="let course of courses; let i = index; trackBy: trackByCourseId"
       [course]="course"

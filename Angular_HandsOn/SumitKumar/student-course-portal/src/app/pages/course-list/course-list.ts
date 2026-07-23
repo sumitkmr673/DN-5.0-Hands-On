@@ -2,28 +2,28 @@ import { HighlightDirective } from '../../directives/highlight';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CourseCard } from '../../components/course-card/course-card';
+import { Course } from '../../models/course.model';
+import { CourseService } from '../../services/course';
+import { CourseSummaryWidget } from '../../components/course-summary-widget/course-summary-widget';
 
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, CourseCard, HighlightDirective],
+  imports: [CommonModule, CourseCard, HighlightDirective, CourseSummaryWidget],
   templateUrl: './course-list.html',
   styleUrl: './course-list.css',
 })
 export class CourseList implements OnInit {
   isLoading = true;
 
-  courses = [
-    { id: 101, name: 'Angular Fundamentals', code: 'CS101', credits: 3, gradeStatus: 'passed' },
-    { id: 102, name: 'Advanced RxJS', code: 'CS201', credits: 4, gradeStatus: 'pending' },
-    { id: 103, name: 'State Management', code: 'CS301', credits: 3, gradeStatus: 'failed' },
-    { id: 104, name: 'TypeScript Deep Dive', code: 'CS401', credits: 4, gradeStatus: 'passed' },
-    { id: 105, name: 'Web Performance', code: 'CS501', credits: 2, gradeStatus: 'pending' },
-  ];
+  courses: Course[] = [];
 
   selectedCourseId?: number;
 
+  constructor(private courseService: CourseService) {}
+
   ngOnInit(): void {
+    this.courses = this.courseService.getCourses();
     setTimeout(() => {
       this.isLoading = false;
     }, 1500);
@@ -40,7 +40,18 @@ export class CourseList implements OnInit {
    * DOM elements that changed, rather than destroying and recreating the entire list.
    */
 
-  trackByCourseId(index: number, course: any): number {
+  trackByCourseId(index: number, course: Course): number {
     return course.id;
+  }
+
+  addDummyCourse() {
+    const newCourse: Course = {
+      id: Math.floor(Math.random() * 1000),
+      name: 'New Dynamic Course',
+      code: 'NEW999',
+      credits: 3,
+      gradeStatus: 'pending',
+    };
+    this.courseService.addCourse(newCourse);
   }
 }

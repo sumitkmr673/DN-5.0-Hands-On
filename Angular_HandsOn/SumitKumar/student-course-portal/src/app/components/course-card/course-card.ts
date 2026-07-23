@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
+import { EnrollmentService } from '../../services/enrollment';
 
 @Component({
   selector: 'app-course-card',
@@ -19,8 +20,14 @@ export class CourseCard implements OnChanges {
   };
   @Output() enrollRequested = new EventEmitter<number>();
 
-  isEnrolled: boolean = false;
   isExpanded: boolean = false;
+
+  constructor(private enrollmentService: EnrollmentService) {}
+
+  get isEnrolled(): boolean {
+    if (!this.course) return false;
+    return this.enrollmentService.isEnrolled(this.course.id);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['course']) {
@@ -34,7 +41,11 @@ export class CourseCard implements OnChanges {
   }
 
   onEnroll() {
-    this.isEnrolled = true;
+    if (this.isEnrolled) {
+      this.enrollmentService.unenroll(this.course.id);
+    } else {
+      this.enrollmentService.enroll(this.course.id);
+    }
     this.enrollRequested.emit(this.course.id);
   }
 

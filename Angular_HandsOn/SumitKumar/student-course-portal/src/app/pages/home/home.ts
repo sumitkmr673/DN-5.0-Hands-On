@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CourseService } from '../../services/course';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +14,17 @@ export class Home {
   message = '';
   searchTerm = '';
 
-  coursesAvailable = 0;
+  constructor(private courseService: CourseService) {}
+
+  get coursesAvailable(): number {
+    return this.courseService.getCourses().length;
+  }
 
   onEnrollClick() {
     this.message = 'Enrollment opened!';
   }
 
   ngOnInit() {
-    this.coursesAvailable = 12;
     console.log('Home initialized - courses loaded');
   }
 
