@@ -1,0 +1,21 @@
+{
+  "courses": [
+    {
+      "id": "1",
+      "name": "Angular Basics",
+      "code": "ANG101",
+      "credits": 3,
+      "gradeStatus": "passed"
+    },
+    {
+      "id": "2",
+      "name": "RxJS Advanced",
+      "code": "RJS102",
+      "credits": 3,
+      "gradeStatus": "pending"
+    }
+  ],
+  "students": [],
+  "enrollments": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}

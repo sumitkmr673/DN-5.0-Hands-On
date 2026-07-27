@@ -1,11 +1,13 @@
 <h2>My Profile</h2>
 <h3>Enrolled Courses</h3>
 
-<ul *ngIf="enrolledCourses.length > 0; else noCourses">
-  <li *ngFor="let course of enrolledCourses">
-    {{ course.name }} ({{ course.code }}) - {{ course.credits }} Credits
-  </li>
-</ul>
+<ng-container *ngIf="enrolledCourses$ | async as courses">
+  <ul *ngIf="courses.length > 0; else noCourses">
+    <li *ngFor="let course of courses">
+      {{ course.name }} ({{ course.code }}) - {{ course.credits }} Credits
+    </li>
+  </ul>
+</ng-container>
 
 <ng-template #noCourses>
   <p>You are not currently enrolled in any courses.</p>

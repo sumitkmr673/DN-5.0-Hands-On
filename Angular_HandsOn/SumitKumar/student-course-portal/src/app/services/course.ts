@@ -1,29 +1,51 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError, tap, retry } from 'rxjs/operators';
 import { Course } from '../models/course.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CourseService {
-  private courses: Course[] = [
-    { id: 1, name: 'Angular Basics', code: 'CS101', credits: 3, gradeStatus: 'passed' },
-    { id: 2, name: 'Reactive Forms', code: 'CS102', credits: 4, gradeStatus: 'pending' },
-    { id: 3, name: 'RxJS Streams', code: 'CS103', credits: 3, gradeStatus: 'failed' },
-    { id: 4, name: 'State Management', code: 'CS104', credits: 4, gradeStatus: 'pending' },
-    { id: 5, name: 'Deployment', code: 'CS105', credits: 2, gradeStatus: 'passed' },
-  ];
+  private apiUrl = 'http://localhost:3000/courses';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getCourses(): Course[] {
-    return this.courses;
+  getCourses(): Observable<Course[]> {
+    return this.http.get<Course[]>(this.apiUrl).pipe(
+      // 1. retry(2): Retries failed HTTP requests up to 2 times before propagating the error
+      retry(2),
+
+      // 2. tap(): tap is preferred over side effects inside map because tap is designed
+      // strictly for side effects (like logging). It does not alter the observable stream,
+      // allowing map to remain a pure function used only for data transformation.
+      tap((courses) => console.log('Courses loaded:', courses.length)),
+
+      // 3. map(): Transforms the API response before it reaches the component
+      map((courses) => courses.filter((c) => c.credits > 0)),
+
+      // 4. catchError(): Intercepts errors and returns a custom error message
+      catchError((err) => {
+        console.error(err);
+        return throwError(() => new Error('Failed to load courses. Please try again.'));
+      }),
+    );
   }
 
-  getCourseById(id: number): Course | undefined {
-    return this.courses.find((course) => course.id === id);
+  getCourseById(id: string | number): Observable<Course> {
+    return this.http.get<Course>(`${this.apiUrl}/${id}`);
   }
 
-  addCourse(course: Course): void {
-    this.courses.push(course);
+  createCourse(course: Omit<Course, 'id'>): Observable<Course> {
+    return this.http.post<Course>(this.apiUrl, course);
+  }
+
+  updateCourse(id: string | number, course: Partial<Course>): Observable<Course> {
+    return this.http.put<Course>(`${this.apiUrl}/${id}`, course);
+  }
+
+  deleteCourse(id: string | number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

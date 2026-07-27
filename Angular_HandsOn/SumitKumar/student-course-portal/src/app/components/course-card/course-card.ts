@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
 import { EnrollmentService } from '../../services/enrollment';
+import { Course } from '../../models/course.model';
 
 @Component({
   selector: 'app-course-card',
@@ -11,14 +12,10 @@ import { EnrollmentService } from '../../services/enrollment';
   styleUrl: './course-card.css',
 })
 export class CourseCard implements OnChanges {
-  @Input() course!: {
-    id: number;
-    name: string;
-    code: string;
-    credits: number;
-    gradeStatus: string;
-  };
-  @Output() enrollRequested = new EventEmitter<number>();
+  @Input() course!: Course;
+
+  @Output() enrollRequested = new EventEmitter<string | number>();
+  @Output() delete = new EventEmitter<string | number>();
 
   isExpanded: boolean = false;
 
@@ -38,6 +35,11 @@ export class CourseCard implements OnChanges {
         changes['course'].currentValue,
       );
     }
+  }
+
+  onDelete(event: MouseEvent): void {
+    event.stopPropagation();
+    this.delete.emit(this.course.id);
   }
 
   onEnroll(event: MouseEvent): void {

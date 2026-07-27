@@ -19,8 +19,11 @@ import { CourseService } from '../../services/course';
 })
 export class CourseSummaryWidget {
   constructor(private courseService: CourseService) {}
+  courseCount: number = 0;
 
-  get courseCount(): number {
-    return this.courseService.getCourses().length;
+  ngOnInit(): void {
+    this.courseService.getCourses().subscribe((courses) => {
+      this.courseCount = courses.length;
+    });
   }
 }

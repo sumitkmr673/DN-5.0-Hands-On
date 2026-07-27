@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnrollmentService } from '../../services/enrollment';
 import { Course } from '../../models/course.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-student-profile',
@@ -10,10 +11,12 @@ import { Course } from '../../models/course.model';
   templateUrl: './student-profile.html',
   styleUrl: './student-profile.css',
 })
-export class StudentProfile {
+export class StudentProfile implements OnInit {
+  enrolledCourses$!: Observable<Course[]>;
+
   constructor(private enrollmentService: EnrollmentService) {}
 
-  get enrolledCourses(): Course[] {
-    return this.enrollmentService.getEnrolledCourses();
+  ngOnInit(): void {
+    this.enrolledCourses$ = this.enrollmentService.getEnrolledCourses();
   }
 }

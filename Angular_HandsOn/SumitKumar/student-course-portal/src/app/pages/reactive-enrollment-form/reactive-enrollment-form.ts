@@ -10,6 +10,7 @@ import {
   FormArray,
 } from '@angular/forms';
 import { CanComponentDeactivate } from '../../guards/unsaved-changes-guard';
+import { CourseService } from '../../services/course';
 
 export function noCourseCode(control: AbstractControl): ValidationErrors | null {
   if (
@@ -44,7 +45,10 @@ export function simulateEmailCheck(control: AbstractControl): Promise<Validation
 export class ReactiveEnrollmentForm implements OnInit, CanComponentDeactivate {
   enrollForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private courseService: CourseService,
+  ) {}
 
   ngOnInit(): void {
     this.enrollForm = this.fb.group({
@@ -90,5 +94,22 @@ export class ReactiveEnrollmentForm implements OnInit, CanComponentDeactivate {
 
     // DIFFERENCE: enrollForm.value excludes any form controls that are dynamically disabled.
     // enrollForm.getRawValue() includes the values of ALL controls, even if they are disabled.
+    if (this.enrollForm.valid) {
+      const newCourse = {
+        name: this.enrollForm.value.studentName + "'s Course",
+        code: String(this.enrollForm.value.courseId),
+        credits: 3,
+        gradeStatus: 'pending' as const,
+      };
+
+      this.courseService.createCourse(newCourse).subscribe({
+        next: (response) => {
+          console.log('Course successfully created in API!', response);
+          this.enrollForm.reset();
+          alert('Saved successfully to database!');
+        },
+        error: (err) => console.error('Error saving course', err),
+      });
+    }
   }
 }

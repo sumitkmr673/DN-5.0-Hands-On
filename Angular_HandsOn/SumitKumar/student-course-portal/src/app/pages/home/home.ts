@@ -16,16 +16,16 @@ export class Home {
 
   constructor(private courseService: CourseService) {}
 
-  get coursesAvailable(): number {
-    return this.courseService.getCourses().length;
+  totalCourses: number = 0;
+  ngOnInit(): void {
+    this.courseService.getCourses().subscribe((courses) => {
+      this.totalCourses = courses.length;
+    });
+    console.log('Home initialized - courses loaded');
   }
 
   onEnrollClick() {
     this.message = 'Enrollment opened!';
-  }
-
-  ngOnInit() {
-    console.log('Home initialized - courses loaded');
   }
 
   ngOnDestroy() {
