@@ -9,6 +9,7 @@ import {
   ValidationErrors,
   FormArray,
 } from '@angular/forms';
+import { CanComponentDeactivate } from '../../guards/unsaved-changes-guard';
 
 export function noCourseCode(control: AbstractControl): ValidationErrors | null {
   if (
@@ -40,7 +41,7 @@ export function simulateEmailCheck(control: AbstractControl): Promise<Validation
   templateUrl: './reactive-enrollment-form.html',
   styleUrl: './reactive-enrollment-form.css',
 })
-export class ReactiveEnrollmentForm implements OnInit {
+export class ReactiveEnrollmentForm implements OnInit, CanComponentDeactivate {
   enrollForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
@@ -54,6 +55,13 @@ export class ReactiveEnrollmentForm implements OnInit {
       agreeToTerms: [false, Validators.requiredTrue],
       additionalCourses: this.fb.array([]),
     });
+  }
+
+  canDeactivate(): boolean {
+    if (this.enrollForm && this.enrollForm.dirty) {
+      return window.confirm('You have unsaved changes. Leave?');
+    }
+    return true;
   }
 
   get additionalCourses(): FormArray {

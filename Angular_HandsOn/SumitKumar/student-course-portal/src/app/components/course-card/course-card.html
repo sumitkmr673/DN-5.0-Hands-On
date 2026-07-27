@@ -16,7 +16,7 @@
     {{ isExpanded ? 'Hide Details' : 'Show Details' }}
   </button>
 
-  <button (click)="onEnroll()" style="margin-left: 8px">
+  <button (click)="onEnroll($event)" style="margin-left: 8px">
     {{ isEnrolled ? 'Unenroll' : 'Enroll' }}
   </button>
 </div>

@@ -40,7 +40,8 @@ export class CourseCard implements OnChanges {
     }
   }
 
-  onEnroll() {
+  onEnroll(event: MouseEvent): void {
+    event.stopPropagation();
     if (this.isEnrolled) {
       this.enrollmentService.unenroll(this.course.id);
     } else {

@@ -1,0 +1,26 @@
+<div class="course-detail-container" *ngIf="course; else notFound">
+  <!-- Back navigation using routerLink -->
+  <button><a routerLink="/courses" class="back-link">← Back to Courses</a></button>
+
+  <h2>{{ course.name }}</h2>
+
+  <div class="detail-card">
+    <p><strong>Course Code:</strong> {{ course.code }}</p>
+    <p><strong>Credits:</strong> {{ course.credits }}</p>
+    <p>
+      <strong>Status:</strong>
+      <span [ngClass]="'status-badge ' + course.gradeStatus">
+        {{ course.gradeStatus | titlecase }}
+      </span>
+    </p>
+  </div>
+</div>
+
+<!-- Fallback if the course ID from the URL doesn't exist in the service -->
+<ng-template #notFound>
+  <div class="not-found">
+    <h2>Course Not Found</h2>
+    <p>We couldn't find a course with that ID.</p>
+    <a routerLink="/courses">Return to Course List</a>
+  </div>
+</ng-template>
