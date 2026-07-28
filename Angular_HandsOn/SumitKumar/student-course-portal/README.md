@@ -1,59 +1,111 @@
-# StudentCoursePortal
+# Student Course Portal
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.7.
+A modern Angular application developed as part of the **Cognizant
+Digital Nurture 5.0 -- Angular Hands-On** program. This repository
+demonstrates Angular concepts through a series of hands-on exercises,
+including routing, forms, services, HTTP communication, directives,
+pipes, route guards, interceptors, NgRx state management, and unit
+testing.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Course listing and management
+- Student enrollment forms
+- Template-driven and Reactive Forms
+- Custom directives and pipes
+- HTTP services using HttpClient
+- Route Guards
+- HTTP Interceptors
+- NgRx Store integration
+
+## Tech Stack
+
+- Angular 22
+- TypeScript
+- RxJS
+- NgRx
+- HTML & CSS
+- Vitest (default testing framework in Angular 22)
+
+## Hands-On Coverage
+
+Hands-On Topic Status
+
+---
+
+1 Angular Fundamentals ✅
+2 Components & Data Binding ✅
+3 Routing ✅
+4 Forms ✅
+5 Services & Dependency Injection ✅
+6 Directives & Pipes ✅
+7 Route Guards ✅
+8 HTTP Interceptors ✅
+9 NgRx State Management ✅
+10 Unit Testing ✅
+
+## Project Structure
+
+```text
+src/
+└── app/
+    ├── components/
+    ├── directives/
+    ├── guards/
+    ├── interceptors/
+    ├── models/
+    ├── pages/
+    ├── pipes/
+    ├── services/
+    └── store/
+```
+
+## Getting Started
+
+Clone the repository:
+
+```bash
+git clone <your-repository-url>
+cd student-course-portal
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the application:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Run the unit tests:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Unit Testing
 
-For end-to-end (e2e) testing, run:
+As part of **Hands-On 10**, the following unit tests were implemented:
 
-```bash
-ng e2e
-```
+- `CourseCardComponent`
+- `CourseService`
+- `CourseList` (using NgRx MockStore)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Additional component `.spec.ts` files are the default Angular CLI
+generated tests (`should create`) retained as part of the project
+structure.
 
-## Additional Resources
+> **Note:** This project was created using **Angular CLI 22**, which
+> uses **Vitest** as the default testing framework. The Hands-On guide
+> references **Jasmine/Karma** (written for Angular v20), but the same
+> Angular testing concepts---such as **TestBed**,
+> **HttpTestingController**, and **MockStore**---have been implemented
+> using Angular 22's default testing environment.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Author
+
+Sumit Kumar
