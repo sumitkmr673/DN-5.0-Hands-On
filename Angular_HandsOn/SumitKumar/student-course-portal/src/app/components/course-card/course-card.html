@@ -1,23 +1,29 @@
-<div
-  class="card"
-  [ngClass]="cardClasses"
-  [ngStyle]="{ 'border-left': '6px solid ' + getBorderColor() }"
->
-  <h3>{{ course.name }} ({{ course.code }})</h3>
-  <p>ID: {{ course.id }} | {{ course.credits | creditLabel }}</p>
+<ng-container *ngIf="enrolledIds$ | async as enrolledIds">
+  <div
+    class="card"
+    [ngClass]="{
+      'card--enrolled': enrolledIds.includes(course.id),
+      'card--full': course.credits >= 4,
+      expanded: isExpanded,
+    }"
+    [ngStyle]="{ 'border-left': '6px solid ' + getBorderColor() }"
+  >
+    <h3>{{ course.name }} ({{ course.code }})</h3>
+    <p>ID: {{ course.id }} | {{ course.credits | creditLabel }}</p>
 
-  <div [ngSwitch]="course.gradeStatus" style="margin-bottom: 10px; font-weight: bold">
-    <span *ngSwitchCase="'passed'" style="color: green">Passed</span>
-    <span *ngSwitchCase="'failed'" style="color: red">Failed</span>
-    <span *ngSwitchCase="'pending'" style="color: grey">Pending</span>
+    <div [ngSwitch]="course.gradeStatus" style="margin-bottom: 10px; font-weight: bold">
+      <span *ngSwitchCase="'passed'" style="color: green">Passed</span>
+      <span *ngSwitchCase="'failed'" style="color: red">Failed</span>
+      <span *ngSwitchCase="'pending'" style="color: grey">Pending</span>
+    </div>
+
+    <button (click)="toggleDetails()">
+      {{ isExpanded ? 'Hide Details' : 'Show Details' }}
+    </button>
+
+    <button (click)="onEnroll($event, enrolledIds.includes(course.id))" style="margin-left: 8px">
+      {{ enrolledIds.includes(course.id) ? 'Unenroll' : 'Enroll' }}
+    </button>
+    <button (click)="onDelete($event)" class="btn-delete">Delete</button>
   </div>
-
-  <button (click)="toggleDetails()">
-    {{ isExpanded ? 'Hide Details' : 'Show Details' }}
-  </button>
-
-  <button (click)="onEnroll($event)" style="margin-left: 8px">
-    {{ isEnrolled ? 'Unenroll' : 'Enroll' }}
-  </button>
-  <button (click)="onDelete($event)" class="btn-delete">Delete</button>
-</div>
+</ng-container>

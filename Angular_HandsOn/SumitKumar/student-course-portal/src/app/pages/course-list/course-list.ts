@@ -1,3 +1,12 @@
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { loadCourses } from '../../store/course/course-actions';
+import {
+  selectAllCourses,
+  selectCoursesError,
+  selectCoursesLoading,
+} from '../../store/course/course-selectors';
+
 import { HighlightDirective } from '../../directives/highlight';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -27,9 +36,9 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './course-list.css',
 })
 export class CourseList implements OnInit {
-  isLoading = true;
-  courses: Course[] = [];
-  errorMessage: string = '';
+  courses$: Observable<Course[]>;
+  isLoading$: Observable<boolean>;
+  errorMessage$: Observable<string | null>;
 
   selectedCourseId?: string | number;
   searchTerm: string = '';
@@ -38,12 +47,17 @@ export class CourseList implements OnInit {
   studentsForCourse: string[] = [];
 
   constructor(
+    private store: Store,
     private courseService: CourseService,
     private enrollmentService: EnrollmentService,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-  ) {}
+  ) {
+    this.courses$ = this.store.select(selectAllCourses);
+    this.isLoading$ = this.store.select(selectCoursesLoading);
+    this.errorMessage$ = this.store.select(selectCoursesError);
+  }
 
   simulate401() {
     this.http.get('https://httpstat.us/401').subscribe();
@@ -55,18 +69,7 @@ export class CourseList implements OnInit {
       this.searchTerm = savedSearch;
     }
 
-    this.courseService.getCourses().subscribe({
-      next: (courses) => {
-        this.courses = courses;
-      },
-      error: (err) => {
-        this.errorMessage = err.message;
-        this.isLoading = false;
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
+    this.store.dispatch(loadCourses());
 
     this.courseSelection$
       .pipe(
@@ -81,10 +84,6 @@ export class CourseList implements OnInit {
         this.studentsForCourse = students;
         console.log('Students loaded successfully:', students);
       });
-
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
   }
 
   viewCourseDetails(courseId: string | number): void {
@@ -109,8 +108,6 @@ export class CourseList implements OnInit {
     this.courseService.deleteCourse(courseId).subscribe({
       next: () => {
         console.log(`Course ${courseId} successfully deleted from backend.`);
-
-        this.courses = this.courses.filter((course) => course.id !== courseId);
       },
       error: (err) => {
         console.error('Error deleting course:', err);
@@ -139,7 +136,6 @@ export class CourseList implements OnInit {
     this.courseService.createCourse(newCourse).subscribe({
       next: (createdCourse) => {
         console.log('Course added to DB:', createdCourse);
-        this.courses.push(createdCourse);
       },
       error: (err) => {
         console.error('Error adding course:', err);

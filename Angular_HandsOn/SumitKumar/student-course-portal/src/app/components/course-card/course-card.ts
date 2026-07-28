@@ -1,8 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
-import { EnrollmentService } from '../../services/enrollment';
 import { Course } from '../../models/course.model';
+import { enrollInCourse, unenrollFromCourse } from '../../store/enrollment/enrollment-actions';
+import { selectEnrolledIds } from '../../store/enrollment/enrollment-selectors';
 
 @Component({
   selector: 'app-course-card',
@@ -18,12 +21,11 @@ export class CourseCard implements OnChanges {
   @Output() delete = new EventEmitter<string | number>();
 
   isExpanded: boolean = false;
+  enrolledIds$: Observable<(string | number)[]>;
 
-  constructor(private enrollmentService: EnrollmentService) {}
-
-  get isEnrolled(): boolean {
-    if (!this.course) return false;
-    return this.enrollmentService.isEnrolled(this.course.id);
+  // 1. Inject the Store instead of EnrollmentService
+  constructor(private store: Store) {
+    this.enrolledIds$ = this.store.select(selectEnrolledIds);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,12 +44,13 @@ export class CourseCard implements OnChanges {
     this.delete.emit(this.course.id);
   }
 
-  onEnroll(event: MouseEvent): void {
+  // 2. We pass the isEnrolled boolean directly from the HTML template now!
+  onEnroll(event: MouseEvent, isEnrolled: boolean): void {
     event.stopPropagation();
-    if (this.isEnrolled) {
-      this.enrollmentService.unenroll(this.course.id);
+    if (isEnrolled) {
+      this.store.dispatch(unenrollFromCourse({ courseId: this.course.id }));
     } else {
-      this.enrollmentService.enroll(this.course.id);
+      this.store.dispatch(enrollInCourse({ courseId: this.course.id }));
     }
     this.enrollRequested.emit(this.course.id);
   }
@@ -69,17 +72,5 @@ export class CourseCard implements OnChanges {
     }
   }
 
-  /**
-   * getters keep templates clean by moving complex conditional logic out of the HTML
-   * and into the TypeScript class. This improves readability, makes testing easier,
-   * and prevents the template deom becoming cluttered with business logic.
-   */
-
-  get cardClasses() {
-    return {
-      'card--enrolled': this.isEnrolled,
-      'card--full': this.course.credits >= 4,
-      expanded: this.isExpanded,
-    };
-  }
+  // Notice: get isEnrolled() and get cardClasses() are completely GONE!
 }

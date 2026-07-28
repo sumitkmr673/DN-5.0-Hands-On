@@ -1,5 +1,4 @@
 <h2>Available Courses</h2>
-<button (click)="simulate401()">Simulate 401 Error</button>
 
 <div style="margin-bottom: 20px">
   <input
@@ -11,10 +10,10 @@
   />
 </div>
 
-<p *ngIf="isLoading">Loading courses...</p>
+<p *ngIf="isLoading$ | async">Loading courses...</p>
 
 <div
-  *ngIf="errorMessage"
+  *ngIf="errorMessage$ | async as errorMessage"
   style="
     color: red;
     padding: 10px;
@@ -26,8 +25,8 @@
   <strong>Error:</strong> {{ errorMessage }}
 </div>
 
-<ng-container *ngIf="!isLoading">
-  <ng-container *ngIf="courses.length > 0; else noCourses">
+<ng-container *ngIf="!(isLoading$ | async) && !(errorMessage$ | async)">
+  <ng-container *ngIf="(courses$ | async)?.length; else noCourses">
     <button
       (click)="addDummyCourse()"
       style="
@@ -44,7 +43,7 @@
     </button>
     <app-course-summary-widget></app-course-summary-widget>
     <app-course-card
-      *ngFor="let course of courses; let i = index; trackBy: trackByCourseId"
+      *ngFor="let course of courses$ | async; let i = index; trackBy: trackByCourseId"
       [course]="course"
       (enrollRequested)="onEnroll($event)"
       (delete)="onDelete($event)"
@@ -57,7 +56,7 @@
 </ng-container>
 
 <ng-template #noCourses>
-  <p>No courses available.</p>
+  <p *ngIf="!(errorMessage$ | async)">No courses available.</p>
 </ng-template>
 
 <p *ngIf="selectedCourseId">Selected course ID: {{ selectedCourseId }}</p>
